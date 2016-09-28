@@ -138,7 +138,15 @@ if (system.args.length === 1) {
             });
             har = createHAR(page.address, page.title, page.startTime, page.resources);
             console.log(JSON.stringify(har, undefined, 4));
-            phantom.exit();
+		
+	    //http://stackoverflow.com/questions/22564010/analysing-incoming-network-traffic-with-phantomjs
+	    //ADDED TO GET ADDITIONAL OUTPUT Without this change, phantom exits before it records all the network activity we seek
+            setTimeout(function(){
+                har = createHAR(page.address, page.title, page.startTime, page.resources);
+                console.log(JSON.stringify(har, undefined, 4));
+                phantom.exit();
+            },20000); /* pause 20 seconds to let things run after onLoad */
+            
         }
     });
 }
