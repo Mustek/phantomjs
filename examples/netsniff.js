@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 if (!Date.prototype.toISOString) {
     Date.prototype.toISOString = function () {
         function pad(n) { return n < 10 ? '0' + n : n; }
@@ -148,10 +148,11 @@ if (system.args.length === 1) {
             page.title = page.evaluate(function () {
                 return document.title;
             });
-            har = createHAR(page.address, page.title, page.startTime, page.resources);
-            console.log(JSON.stringify(har, undefined, 4));
             //TIMER ADDED
             setTimeout(function(){
+            har = createHAR(page.address, page.title, page.startTime, page.resources);
+            console.log(JSON.stringify(har, undefined, 4));
+            
                 phantom.exit();
             }, 20000);
         }
