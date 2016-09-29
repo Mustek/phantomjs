@@ -126,6 +126,18 @@ if (system.args.length === 1) {
         }
     };
 
+// ADDED TO IGNORE JS ERRORS IN HAR OUTPUT
+    page.onError = function(msg, trace) {
+        var msgStack = ['ERROR: ' + msg];
+        if (trace && trace.length) {
+            msgStack.push('TRACE:');
+            trace.forEach(function(t) {
+                msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function + '")' : ''));
+            });
+        }
+        // uncomment to log into the console 
+        // console.error(msgStack.join('\n'));
+    };
     page.open(page.address, function (status) {
         var har;
         if (status !== 'success') {
@@ -138,15 +150,10 @@ if (system.args.length === 1) {
             });
             har = createHAR(page.address, page.title, page.startTime, page.resources);
             console.log(JSON.stringify(har, undefined, 4));
-		
-	    //http://stackoverflow.com/questions/22564010/analysing-incoming-network-traffic-with-phantomjs
-	    //ADDED TO GET ADDITIONAL OUTPUT Without this change, phantom exits before it records all the network activity we seek
+            //TIMER ADDED
             setTimeout(function(){
-                har = createHAR(page.address, page.title, page.startTime, page.resources);
-                console.log(JSON.stringify(har, undefined, 4));
                 phantom.exit();
-            },20000); /* pause 20 seconds to let things run after onLoad */
-            
+            }, 20000);
         }
     });
 }
