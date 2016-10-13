@@ -94,6 +94,19 @@ function createHAR(address, title, startTime, resources)
     };
 }
 
+var args = require('system').args,
+    viewportSize = {width: 1280, height: 1024},
+    page = require('webpage').create();
+
+if (args.length >= 1) {
+  args.forEach(function(arg, i) {
+    if (arg.match(/^[0-9]+x[0-9]+$/)) {
+      var viewportParts = arg.split('x');
+      viewportSize = {width: viewportParts[0], height: viewportParts[1]};
+    }
+  });
+}
+
 var page = require('webpage').create(),
     system = require('system');
 
@@ -102,6 +115,7 @@ if (system.args.length === 1) {
     phantom.exit(1);
 } else {
 
+    page.viewportSize = viewportSize;	
     page.address = system.args[1];
     page.resources = [];
 
